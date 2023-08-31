@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Interview</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        #instructions {
+            margin-bottom: 20px;
+        }
+        #startButton {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="instructions">
+        <h1>Welcome to the Interview</h1>
+        <p>Please read the instructions carefully:</p>
+        <p>When you click "Start," questions will be loaded, and your eye movements will be tracked during the interview.</p>
+    </div>
+    <button id="startButton">Start</button>
+    <div id="irisDetection"></div>
+    <script>
+    document.getElementById("startButton").addEventListener("click", function() {
+        document.getElementById("instructions").style.display = "none";
+        document.getElementById("startButton").style.display = "none";
+        loadQuestions();
+        startIrisDetection();
+    });
+
+    function loadQuestions() {
+    fetch("/load_questions")
+        .then(response => {
+            console.log(response);
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            document.getElementById("irisDetection").innerText = data;
+        })
+        .catch(error => console.error("Error loading questions:", error));
+}
+
+    function startIrisDetection() {
+    fetch("/run_iris_detection")
+        .then(response => {
+            console.log(response);
+            return response.text();
+        })
+        .then(data => {
+            console.log(data);
+            document.getElementById("irisDetection").innerText = data;
+        })
+        .catch(error => console.error("Error running iris detection:", error));
+}
+</script>
+
+</body>
+</html>
